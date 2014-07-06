@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import fileinput
+import os
+import random
+
+def main():
+	v16 = [' | RHVoice -d ~/voices/Elena/ | play - -q ',' | RHVoice -p 1.2 | play - -q speed 1.3', ' | RHVoice -r 0.8 -p 0.9 -d ~/voices/Elena/ | play -q - speed 1.3', ' | RHVoice -r 1.5 | play -q - speed 0.8' , ' | RHVoice -p 0.8 -r 0.8 | play -q - chorus 0.7 0.9 20 0.4 0.25 2 -t chorus 0.7 0.9 20 0.4 0.25 2 -t chorus 0.7 0.9 50 0.4 0.25 2 -t', ' | RHVoice -p 0.8 -r 0.8 -d ~/voices/Elena/ | play -q - chorus 0.7 0.9 20 0.4 0.25 2 -t chorus 0.7 0.9 20 0.4 0.25 2 -t chorus 0.7 0.9 50 0.4 0.25 2 -t']
+	voice = dict()
+	voices = {'default':' | RHVoice -p 0.8 | play - -q speed 1.1'}
+	n = 0
+	for line in fileinput.input():
+		if line.strip():
+			words = line.split()
+			a = (words[0])[-1]
+			if ((a == ':') or (a == '^')):
+				name = (words[0])[:-1]
+				if name not in voices:
+					voices[name] = v16[n];
+					n = n + 1 
+					if(n>=4): n = 0
+
+				if name in voices:
+					#if a == ':' : os.system('echo ' + name + voices['default'])
+					os.system("echo '" + line[(len(name)+1):-1] + "'" + voices[name] )
+			else:
+				os.system('echo ' + line[:-1] + voices['default'])
+	return 0
+
+if __name__ == '__main__':
+	main()
+
